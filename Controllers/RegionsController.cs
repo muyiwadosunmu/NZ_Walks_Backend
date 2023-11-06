@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using NZWalks_API.Data;
 using NZWalks_API.Models.Domain;
 using NZWalks_API.Models.Domain.DTOs;
+using NZWalks_API.Models.DTOs;
 
 namespace NZWalks_API.Controllers
 {
@@ -67,6 +68,93 @@ namespace NZWalks_API.Controllers
             return Ok(regionDto);
         }
 
+        // POST - To Create a new Region
+        // POST: https://localhost:portNumber/api/regions
+        [HttpPost]
+        public IActionResult CreateRegion([FromBody] AddRegionReqDto createRegion)
+        {
+            // Map or Convert DTO to Domain Model
+            var regionDomainModel = new Region
+            {
+                Code = createRegion.Code,
+                Name = createRegion.Name,
+                RegionImageUrl = createRegion.RegionImageUrl,
+            };
+            // Use Domain model ro create region
+            _dbContext.Regions.Add(regionDomainModel);
+            _dbContext.SaveChanges();
 
+            // We need to the Mapping again
+            var regionDto = new RegionDTO
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl
+
+            };
+
+            return CreatedAtAction(nameof(GetById), new { id = regionDomainModel.Id }, regionDto);
+
+        }
+
+        // Update Region
+        // PUT: https://localhost:portNumber/api/regions/{id}
+        [HttpPut]
+        [Route("{id:Guid}")]
+        public IActionResult Update([FromRoute] Guid id, [FromBody] UpdateRegionReqDto updateRegionDto)
+        {
+            // Check if region exists from Database
+            var regionDomainModel = _dbContext.Regions.FirstOrDefault(x => x.Id == id);
+
+            if (regionDomainModel == null)
+            {
+                return NotFound();
+            }
+            // Map DTO to Domain model
+            regionDomainModel.Code = updateRegionDto.Code;
+            regionDomainModel.Name = updateRegionDto.Name;
+            regionDomainModel.RegionImageUrl = updateRegionDto.RegionImageUrl;
+
+            // NB -> We do not need to Add the context because, it's already tracked when we fetched it by id
+            _dbContext.SaveChanges();
+
+            // Convert domain model to DTO
+            var regionDto = new RegionDTO
+            {
+                Id = regionDomainModel.Id,
+                Code = regionDomainModel.Code,
+                Name = regionDomainModel.Name,
+                RegionImageUrl = regionDomainModel.RegionImageUrl,
+            };
+
+            return Ok(regionDto);
+
+        }
+
+
+        // DELETE https://localhost:portNumber/api/regions/{id}
+        [HttpDelete]
+        [Route("{id:Guid}")]
+        public IActionResult Delete([FromRoute] Guid id)
+        {
+            var regionDomainModel = _dbContext.Regions.FirstOrDefault(x => x.Id == id);
+
+            if (regionDomainModel == null)
+            {
+                return NotFound();
+            }
+
+            // Delete if it exists
+            _dbContext.Regions.Remove(regionDomainModel);
+            _dbContext.SaveChanges();
+
+            // If returning the deleted region
+            // Map Domain model to DTO
+
+            return Ok();
+
+
+        }
     }
 }
