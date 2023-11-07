@@ -14,14 +14,12 @@ namespace NZWalks_API.Controllers
     [Route("api/[controller]")]
     public class RegionsController : ControllerBase
     {
-        private readonly NZ_Walks_DB_Context _dbContext;
         private readonly IRegionRepository _regionRepository;
         private readonly IMapper _mapper;
         //////////////////////
 
-        public RegionsController(NZ_Walks_DB_Context dbContext, IRegionRepository regionRepository, IMapper mapper)
+        public RegionsController(IRegionRepository regionRepository, IMapper mapper)
         {
-            this._dbContext = dbContext;
             this._regionRepository = regionRepository;
             this._mapper = mapper;
         }

@@ -11,8 +11,12 @@ namespace NZWalks_API.Mappings
         {
             // Because they are both same we do not need to define member properties explicitly
             CreateMap<Region, RegionDTO>().ReverseMap();
+            CreateMap<Difficulty, DifficultyDto>().ReverseMap();
             CreateMap<AddRegionReqDto, Region>().ReverseMap();
             CreateMap<UpdateRegionReqDto, Region>().ReverseMap();
+            CreateMap<AddWalkReqDto, Walk>().ReverseMap();
+            CreateMap<WalkDto, Walk>().ReverseMap();
+            CreateMap<UpdateWalkReqDto, Walk>().ReverseMap();
 
         }
     }
