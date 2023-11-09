@@ -59,13 +59,21 @@ namespace NZWalks_API.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([FromBody] AddRegionReqDto createRegion)
         {
-            // Map or Convert DTO to Domain Model
-            var regionDomainModel = _mapper.Map<Region>(createRegion);
-            // Use Domain model to create region
-            regionDomainModel = await _regionRepository.CreateAsync(regionDomainModel);
-            // We need to the Mapping again
-            var regionDto = _mapper.Map<RegionDTO>(regionDomainModel);
-            return CreatedAtAction(nameof(GetById), new { id = regionDomainModel.Id }, regionDto);
+            if (ModelState.IsValid)
+            {
+                // Map or Convert DTO to Domain Model
+                var regionDomainModel = _mapper.Map<Region>(createRegion);
+                // Use Domain model to create region
+                regionDomainModel = await _regionRepository.CreateAsync(regionDomainModel);
+                // We need to the Mapping again
+                var regionDto = _mapper.Map<RegionDTO>(regionDomainModel);
+                return CreatedAtAction(nameof(GetById), new { id = regionDomainModel.Id }, regionDto);
+
+            }
+            else
+            {
+                return BadRequest(ModelState);
+            }
 
         }
 
@@ -75,20 +83,27 @@ namespace NZWalks_API.Controllers
         [Route("{id:Guid}")]
         public async Task<IActionResult> Update([FromRoute] Guid id, [FromBody] UpdateRegionReqDto updateRegionDto)
         {
-            // Map DTO to Domain model
-            var regionDomainModel = _mapper.Map<Region>(updateRegionDto);
-            // Fetch region from DB using id
-            regionDomainModel = await _regionRepository.UpdateAsync(id, regionDomainModel);
-
-            if (regionDomainModel == null)
+            if (ModelState.IsValid)
             {
-                return NotFound();
+                // Map DTO to Domain model
+                var regionDomainModel = _mapper.Map<Region>(updateRegionDto);
+                // Fetch region from DB using id
+                regionDomainModel = await _regionRepository.UpdateAsync(id, regionDomainModel);
+
+                if (regionDomainModel == null)
+                {
+                    return NotFound();
+                }
+
+
+                // Convert domain model to DTO
+                var regionDto = _mapper.Map<RegionDTO>(regionDomainModel);
+                return Ok(regionDto);
             }
-
-
-            // Convert domain model to DTO
-            var regionDto = _mapper.Map<RegionDTO>(regionDomainModel);
-            return Ok(regionDto);
+            else
+            {
+                return BadRequest(ModelState);
+            }
 
         }
 
