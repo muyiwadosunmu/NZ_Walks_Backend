@@ -16,6 +16,7 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 //Injected The Database Context
 builder.Services.AddDbContext<NZ_Walks_DB_Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksDBConnectionString")));
+builder.Services.AddDbContext<NZ_Walks_AuthDB_Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksAuthDBConnectionString")));
 // Injected Repository Pattern 
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();

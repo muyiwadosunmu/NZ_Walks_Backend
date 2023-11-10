@@ -7,12 +7,14 @@ using NZWalks_API.Models.DTOs;
 using NZWalks_API.Repositories;
 using AutoMapper;
 using NZWalks_API.CustomActionFilters;
+using Microsoft.AspNetCore.Authorization;
 
 namespace NZWalks_API.Controllers
 {
     // https://localhost:1234/api/
     [ApiController]
     [Route("api/[controller]")]
+    [Authorize]
     public class RegionsController : ControllerBase
     {
         private readonly IRegionRepository _regionRepository;
