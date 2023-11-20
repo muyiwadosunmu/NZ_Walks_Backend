@@ -8,6 +8,7 @@ using NZWalks_API.Repositories;
 using AutoMapper;
 using NZWalks_API.CustomActionFilters;
 using Microsoft.AspNetCore.Authorization;
+using System.Text.Json;
 
 namespace NZWalks_API.Controllers
 {
@@ -18,24 +19,39 @@ namespace NZWalks_API.Controllers
     {
         private readonly IRegionRepository _regionRepository;
         private readonly IMapper _mapper;
+        private readonly ILogger<RegionsController> _logger;
         //////////////////////
 
-        public RegionsController(IRegionRepository regionRepository, IMapper mapper)
+        public RegionsController(IRegionRepository regionRepository,
+        IMapper mapper, ILogger<RegionsController> logger)
         {
             this._regionRepository = regionRepository;
             this._mapper = mapper;
+            this._logger = logger;
         }
         /*GET ALL REGIONS*/
         [HttpGet]
-        [Authorize(Roles = "Reader, Writer")]
+        // [Authorize(Roles = "Reader, Writer")]
         public async Task<IActionResult> GetAll()
         {
-            // Get Data From Database - Domain models
-            var regionsDomain = await _regionRepository.GetAllAsync();
-            /**Map Domain Models to DTOs*/
-            var regionsDto = _mapper.Map<List<RegionDTO>>(regionsDomain);
-            //Return DTO
-            return Ok(regionsDto);
+
+            try
+            {
+                // throw new Exception("This is a custom exception");
+                // Get Data From Database - Domain models
+                var regionsDomain = await _regionRepository.GetAllAsync();
+                /**Map Domain Models to DTOs*/
+                var regionsDto = _mapper.Map<List<RegionDTO>>(regionsDomain);
+                //Return DTO
+                _logger.LogInformation($"Finished GetAllRegions request with data: {JsonSerializer.Serialize(regionsDomain)}");
+                return Ok(regionsDto);
+
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, ex.Message);
+                throw;
+            }
         }
 
         /* GET SINGLE REGION (GET Region by Id*/
