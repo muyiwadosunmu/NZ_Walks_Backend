@@ -36,6 +36,7 @@ namespace NZWalks_API.Controllers
             // Get Data From Database - Domain models
             var walksDomainModel = await _walkRepository.GetAllAsync(filterOn, filterQuery, sortBy, isAscending ?? true, pageNumber, pageSize);
             /**Map Domain Models to DTOs*/
+
             //Return DTO
             return Ok(_mapper.Map<List<WalkDto>>(walksDomainModel));
         }
