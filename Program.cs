@@ -3,6 +3,7 @@ using System.Text;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.FileProviders;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using NZWalks_API.Data;
@@ -99,6 +100,13 @@ app.UseHttpsRedirection();
 //N.B Authentication must come before before Authorization
 app.UseAuthentication();
 app.UseAuthorization();
+//To be able to serve static files
+app.UseStaticFiles(new StaticFileOptions
+{
+    FileProvider = new PhysicalFileProvider(Path.Combine(Directory.GetCurrentDirectory(), "Images")),
+    RequestPath = "/Images"
+    // https://localhost:1234/Images
+});
 
 app.MapControllers();
 
