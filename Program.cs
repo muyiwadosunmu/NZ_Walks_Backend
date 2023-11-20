@@ -20,9 +20,10 @@ builder.Services.AddDbContext<NZ_Walks_DB_Context>(options => options.UseSqlServ
 
 builder.Services.AddDbContext<NZ_Walks_AuthDB_Context>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("NZWalksAuthDBConnectionString")));
 
-// Injected Repository Pattern 
+// Injected Repository Pattern by Injecting the Interface and it's Repository 
 builder.Services.AddScoped<IRegionRepository, SQLRegionRepository>();
 builder.Services.AddScoped<IWalkRepository, SQLWalkRepository>();
+builder.Services.AddScoped<ITokenRepository, TokenRepository>();
 //////////////////////////////////
 builder.Services.AddAutoMapper(typeof(AutoMapperProfile));
 // Add Identity to our Container
