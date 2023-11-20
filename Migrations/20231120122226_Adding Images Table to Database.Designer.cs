@@ -3,17 +3,20 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using NZWalks_API.Data;
 
 #nullable disable
 
-namespace NZWalksAPI.Migrations
+namespace NZWalksAPI.Migrations.NZWalksDB
 {
     [DbContext(typeof(NZ_Walks_DB_Context))]
-    partial class NZWalksDBContextModelSnapshot : ModelSnapshot
+    [Migration("20231120122226_Adding Images Table to Database")]
+    partial class AddingImagesTabletoDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
