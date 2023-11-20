@@ -17,11 +17,13 @@ var builder = WebApplication.CreateBuilder(args);
 
 //Added Serilog for Logging
 var logger = new LoggerConfiguration().
-    WriteTo.Console().
-    MinimumLevel.Information().
-    CreateLogger();
+    MinimumLevel.Information()
+    .WriteTo.Console()
+    .WriteTo.File("Logs/NzWALKS_Logs.txt",
+        rollingInterval: RollingInterval.Day)
+    .CreateLogger();
 // builder.Logging.ClearProviders();
-builder.Logging.AddSerilog();
+builder.Logging.AddSerilog(logger);
 
 builder.Services.AddControllers();
 
